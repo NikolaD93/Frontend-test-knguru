@@ -2,13 +2,17 @@ import { Navigate, Outlet } from 'react-router';
 
 import { Button } from '@/components/ui/button';
 import Header from '@/components/ui/header';
+import Sidebar from '@/components/ui/sidebar';
 import NotFound from '@/features/misc/routes/NotFound';
 import { ProductsRoutes } from '@/features/products';
 
 const App = () => {
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Header />
+    <div className="relative flex min-h-screen flex-col pe-8">
+      <div className="flex items-start">
+        <Sidebar />
+        <Header />
+      </div>
       <div className="flex-1">
         <Outlet />
       </div>
