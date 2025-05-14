@@ -1,7 +1,8 @@
-import { ArrowUp, Loader } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 
 import { Pen, Trash } from '@/assets';
 import { Button } from '@/components/ui/button';
+import { Loader } from '@/components/ui/loader';
 import {
   Table,
   TableBody,
@@ -13,6 +14,7 @@ import {
 import { ErrorFallback } from '@/routes';
 
 import { useProducts } from '../api/getProducts';
+import { type Product } from '../types/product';
 
 export default function Products() {
   const { data: products, isLoading, isError } = useProducts();
@@ -44,7 +46,7 @@ export default function Products() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {products?.map((product) => (
+          {products?.map((product: Product) => (
             <TableRow onClick={() => console.log('clicked')} key={product.id}>
               <TableCell>{product.title}</TableCell>
               <TableCell>{product.price}$</TableCell>
