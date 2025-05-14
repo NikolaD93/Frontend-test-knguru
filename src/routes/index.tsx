@@ -39,6 +39,7 @@ export const AppRoutes = [
     path: '/',
     element: <App />,
     children: [
+      { index: true, element: <Navigate to="/products" replace /> },
       { path: 'products/*', element: <ProductsRoutes />, errorElement: <ErrorFallback /> },
       { path: '/404', element: <NotFound />, errorElement: <ErrorFallback /> },
       { path: '*', element: <Navigate to="." />, errorElement: <ErrorFallback /> },
