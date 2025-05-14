@@ -17,3 +17,6 @@ export { default as Library } from './library.png';
 export { default as RssFeed } from './rss_feed.png';
 export { default as Settings } from './settings.png';
 export { default as Task } from './task.png';
+
+export { default as Pen } from './icon-pen.png';
+export { default as Trash } from './icon-trash.png';

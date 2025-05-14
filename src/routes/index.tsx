@@ -11,10 +11,10 @@ const App = () => {
     <div className="relative flex min-h-screen flex-col pe-8">
       <div className="flex items-start">
         <Sidebar />
-        <Header />
-      </div>
-      <div className="flex-1">
-        <Outlet />
+        <div className="w-full">
+          <Header />
+          <Outlet />
+        </div>
       </div>
     </div>
   );

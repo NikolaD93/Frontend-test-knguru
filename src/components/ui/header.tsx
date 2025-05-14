@@ -4,7 +4,7 @@ import { Avatar } from '@/assets';
 
 export default function Header() {
   return (
-    <div className="border-accent flex w-full justify-between px-8 py-5">
+    <div className="flex w-full justify-between px-8 py-5">
       <Search />
       <div className="flex items-center gap-2">
         <Bell className="me-2" />
