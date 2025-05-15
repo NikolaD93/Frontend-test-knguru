@@ -4,7 +4,7 @@ import { miniSidebarImages } from '@/constants';
 
 export default function SidebarMini() {
   return (
-    <div className="bg-muted px-4 pt-5">
+    <div className="bg-muted w-1/4 px-4 pt-5">
       <Menu className="mx-auto" />
       <div className="mt-10 flex flex-col gap-5 border-b border-[#E0E6EB] pb-4">
         {miniSidebarImages.map((img, id) => (

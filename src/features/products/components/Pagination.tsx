@@ -26,7 +26,7 @@ export default function Pagination({
               setLimit(Number(e.target.value));
               setPage(1);
             }}
-            className="focus:border-accent focus:ring-accent h-10 rounded-md border px-4 text-sm leading-none transition duration-75 outline-none focus:ring-1 focus:ring-inset"
+            className="focus:border-accent focus:ring-accent h-10 cursor-pointer rounded-md border px-4 text-sm leading-none transition duration-75 outline-none focus:ring-1 focus:ring-inset"
           >
             <option value="10">10</option>
             <option value="25">25</option>
@@ -41,7 +41,7 @@ export default function Pagination({
           <button
             disabled={page === 1}
             onClick={() => setPage(1)}
-            className="disabled:text-[#98A4AE]"
+            className="cursor-pointer disabled:text-[#98A4AE]"
             aria-label="First page"
           >
             <ChevronFirst className="h-5 w-5" />
@@ -49,7 +49,7 @@ export default function Pagination({
           <button
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
-            className="disabled:text-[#98A4AE]"
+            className="cursor-pointer disabled:text-[#98A4AE]"
             aria-label="Previous page"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -57,7 +57,7 @@ export default function Pagination({
           <button
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
-            className="disabled:text-[#98A4AE]"
+            className="cursor-pointer disabled:text-[#98A4AE]"
             aria-label="Next page"
           >
             <ChevronRight className="h-5 w-5" />
@@ -65,7 +65,7 @@ export default function Pagination({
           <button
             disabled={page === totalPages}
             onClick={() => setPage(totalPages)}
-            className="disabled:text-[#98A4AE]"
+            className="cursor-pointer disabled:text-[#98A4AE]"
             aria-label="Last page"
           >
             <ChevronLast className="h-5 w-5" />

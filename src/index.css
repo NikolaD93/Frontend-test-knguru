@@ -23,6 +23,9 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-badge: var(--badge);
+  --color-badge-foreground: var(--badge-foreground);
+  --color-star: var(--star);
   --color-destructive: var(--destructive);
   --color-border: var(--border);
   --color-input: var(--input);
@@ -41,6 +44,7 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   --default-font-family: var(--default-font-family);
+  --breakpoint-3xl: 100rem;
 }
 
 :root {
@@ -59,6 +63,9 @@
   --muted-foreground: oklch(0.71 0.02 243.08);
   --accent: oklch(0.52 0.2263 264.97);
   --accent-foreground: oklch(62.5% 0.21 262.2);
+  --badge: oklch(0.9 0.049 287.92);
+  --badge-foreground: oklch(0.58 0.2346 278.29);
+  --star: oklch(0.89 0.1588 92.34);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
