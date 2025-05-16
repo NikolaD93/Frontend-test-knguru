@@ -38,7 +38,11 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoProps) {
       </div>
       <div className="w-full pt-7.5">
         <div>
-          <Button variant="secondary">{product?.availabilityStatus}</Button>
+          <Button
+            variant={`${product?.availabilityStatus === 'In Stock' ? 'secondary' : 'destructive'}`}
+          >
+            {product?.availabilityStatus}
+          </Button>
           <span className="ml-2.5 text-sm font-semibold text-[#98A4AE] capitalize">
             {product?.category}
           </span>

@@ -21,3 +21,4 @@ export { default as Task } from './task.png';
 export { default as Pen } from './icon-pen.png';
 export { default as Trash } from './icon-trash.png';
 export { default as Home } from './icon-home.png';
+export { default as Thumbnail } from './thumbnail.png';
