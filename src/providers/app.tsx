@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router';
+import { Toaster } from 'sonner';
 
 import { AppRoutes } from '@/routes';
 
@@ -26,6 +27,7 @@ export const AppProvider = () => {
         <ReactQueryDevtools />
         <RouterProvider router={Router} />
       </QueryClientProvider>
+      <Toaster closeButton richColors />
     </Suspense>
   );
 };

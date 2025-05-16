@@ -1,10 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { BsPaperclip } from 'react-icons/bs';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { Home, Thumbnail } from '@/assets';
+import { Home } from '@/assets';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,6 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Loader } from '@/components/ui/loader';
 import {
   Select,
   SelectContent,
@@ -25,69 +28,88 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ErrorFallback } from '@/routes';
 
-const formSchema = z.object({
-  productName: z.string().min(2, {
-    message: 'Product name must be at least 2 characters.',
-  }),
-  description: z.string().min(10, {
-    message: 'Description must be at least 10 characters.',
-  }),
-  brand: z.string().min(2, {
-    message: 'Brand must be at least 2 characters.',
-  }),
-  sku: z.string().min(2, {
-    message: 'SKU must be at least 2 characters.',
-  }),
-  stock: z.string().min(2, {
-    message: 'Stock must be at least 2 characters.',
-  }),
-  width: z.string().min(2, {
-    message: 'Width must be at least 2 characters.',
-  }),
-  height: z.string().min(2, {
-    message: 'Height must be at least 2 characters.',
-  }),
-  warranty: z.string().min(2, {
-    message: 'Warranty must be at least 2 characters.',
-  }),
-  shipping: z.string().min(2, {
-    message: 'Shipping must be at least 2 characters.',
-  }),
-  thumbnail: z.string().optional(),
-  media: z.string().optional(),
-  price: z.string().min(2, {
-    message: 'Price must be at least 2 characters.',
-  }),
-  discount: z.string().min(2, {
-    message: 'Discount must be at least 2 characters.',
-  }),
-});
+import { useProductById } from '../api/getProductById';
+import { useUpdateProduct } from '../api/updateProduct';
+import { productSchema } from '../types/productSchema';
 
 export default function EditProduct() {
+  const { id } = useParams();
+  const { data: product, isLoading, isError } = useProductById(id);
+  const updateProductMutation = useUpdateProduct();
   const navigate = useNavigate();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      productName: '',
-      description: '',
-      brand: '',
-      sku: '',
-      stock: '',
-      width: '',
-      height: '',
-      warranty: '',
-      shipping: '',
-      thumbnail: '',
-      media: '',
-      price: '',
-      discount: '',
-    },
+
+  const form = useForm<z.infer<typeof productSchema>>({
+    resolver: zodResolver(productSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  useEffect(() => {
+    if (product) {
+      form.reset({
+        title: product.title,
+        description: product.description,
+        brand: product.brand,
+        sku: product.sku,
+        stock: product.stock,
+        dimensions: product.dimensions,
+        warrantyInformation: product.warrantyInformation,
+        shippingInformation: product.shippingInformation,
+        images: product.images,
+        price: product.price,
+        discountPercentage: product.discountPercentage,
+        thumbnail: product.thumbnail,
+        availabilityStatus: product.availabilityStatus,
+        category: product.category,
+        tags: product.tags,
+      });
+    }
+  }, [product, form]);
+
+  async function onSubmit(values: z.infer<typeof productSchema>) {
+    if (!id) {
+      alert('No product id found!');
+      return;
+    }
+
+    try {
+      await updateProductMutation.mutateAsync({
+        id,
+        updatedData: {
+          title: values.title,
+          description: values.description,
+          brand: values.brand,
+          sku: values.sku,
+          stock: values.stock,
+          dimensions: values.dimensions,
+          warrantyInformation: values.warrantyInformation,
+          shippingInformation: values.shippingInformation,
+          images: values.images,
+          price: values.price,
+          discountPercentage: values.discountPercentage,
+          thumbnail: values.thumbnail,
+          availabilityStatus: values.availabilityStatus,
+          category: values.category,
+          tags: values.tags,
+        },
+      });
+      toast(
+        <pre className="bg-accent mt-2 w-full rounded-md p-4">
+          <code className="text-background block w-full whitespace-pre-wrap">
+            {JSON.stringify(values, null, 4)}
+          </code>
+        </pre>
+      );
+      navigate(-1);
+    } catch (error) {
+      alert('Failed to update product');
+      console.error(error);
+    }
   }
+
+  if (isLoading) return <Loader />;
+  if (!product || isError) return <ErrorFallback />;
+
   return (
     <Form {...form}>
       <form
@@ -109,7 +131,7 @@ export default function EditProduct() {
               <h2 className="text-lg font-bold">General</h2>
               <FormField
                 control={form.control}
-                name="productName"
+                name="title"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
@@ -185,7 +207,7 @@ export default function EditProduct() {
               <div className="flex gap-7.5">
                 <FormField
                   control={form.control}
-                  name="width"
+                  name="dimensions.width"
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>Width</FormLabel>
@@ -198,7 +220,7 @@ export default function EditProduct() {
                 />
                 <FormField
                   control={form.control}
-                  name="height"
+                  name="dimensions.height"
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>Height</FormLabel>
@@ -213,7 +235,7 @@ export default function EditProduct() {
               <div className="flex gap-7.5">
                 <FormField
                   control={form.control}
-                  name="warranty"
+                  name="warrantyInformation"
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>Warranty</FormLabel>
@@ -226,7 +248,7 @@ export default function EditProduct() {
                 />
                 <FormField
                   control={form.control}
-                  name="shipping"
+                  name="shippingInformation"
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>Shipping</FormLabel>
@@ -243,7 +265,7 @@ export default function EditProduct() {
               <h2 className="text-lg font-bold">Media</h2>
               <FormField
                 control={form.control}
-                name="media"
+                name="images"
                 render={({ field }) => (
                   <FormItem className="flex">
                     <FormLabel>
@@ -281,7 +303,7 @@ export default function EditProduct() {
               />
               <FormField
                 control={form.control}
-                name="discount"
+                name="discountPercentage"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
@@ -307,7 +329,12 @@ export default function EditProduct() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      <img className="w-full" src={Thumbnail} alt="thumbnail" {...field} />
+                      <img
+                        className="h-[160px] w-full object-contain"
+                        src={product.thumbnail}
+                        alt="thumbnail"
+                        {...field}
+                      />
                     </FormLabel>
                     <FormDescription className="mt-5 text-center text-sm">
                       Set the product thumbnail image. Only *.png, *.jpg and *.jpeg image files are
@@ -325,19 +352,21 @@ export default function EditProduct() {
               </div>
               <FormField
                 control={form.control}
-                name="email"
+                name="availabilityStatus"
                 render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={product.availabilityStatus}
+                    >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Draft" />
+                          <SelectValue placeholder="Please select" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="m@example.com">m@example.com</SelectItem>
-                        <SelectItem value="m@google.com">m@google.com</SelectItem>
-                        <SelectItem value="m@support.com">m@support.com</SelectItem>
+                        <SelectItem value="In Stock">In Stock</SelectItem>
+                        <SelectItem value="Low Stock">Low Stock</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormDescription>Set the product status</FormDescription>
@@ -350,20 +379,21 @@ export default function EditProduct() {
               <h2 className="text-lg font-bold">Product Details</h2>
               <FormField
                 control={form.control}
-                name="email"
+                name="category"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Categories</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} defaultValue={product.category}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Draft" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="m@example.com">m@example.com</SelectItem>
-                        <SelectItem value="m@google.com">m@google.com</SelectItem>
-                        <SelectItem value="m@support.com">m@support.com</SelectItem>
+                        <SelectItem value="beauty">Beauty</SelectItem>
+                        <SelectItem value="health">Health</SelectItem>
+                        <SelectItem value="fragrances">Fragrances</SelectItem>
+                        <SelectItem value="groceries">Groceries</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormDescription className="text-foreground">
@@ -376,20 +406,24 @@ export default function EditProduct() {
               <Badge className="w-full">+ Create New Category</Badge>
               <FormField
                 control={form.control}
-                name="email"
+                name="tags"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Tags</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} defaultValue={product.tags[0]}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Draft" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="m@example.com">m@example.com</SelectItem>
-                        <SelectItem value="m@google.com">m@google.com</SelectItem>
-                        <SelectItem value="m@support.com">m@support.com</SelectItem>
+                        {product?.tags?.map((tag, id) => {
+                          return (
+                            <SelectItem key={id} value={tag}>
+                              {tag}
+                            </SelectItem>
+                          );
+                        })}
                       </SelectContent>
                     </Select>
                     <FormDescription className="text-foreground">
@@ -405,8 +439,8 @@ export default function EditProduct() {
         </div>
 
         <div className="space-x-7.5">
-          <Button type="submit" variant="submit">
-            Save Changes
+          <Button type="submit" variant="submit" disabled={updateProductMutation.isPending}>
+            {updateProductMutation.isPending ? 'Saving...' : 'Save Changes'}
           </Button>
           <Button onClick={() => navigate(-1)} type="button" variant="cancel">
             Cancel
