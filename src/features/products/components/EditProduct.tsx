@@ -94,7 +94,7 @@ export default function EditProduct() {
         },
       });
       toast(
-        <pre className="bg-accent mt-2 w-full rounded-md p-4">
+        <pre className="bg-accent mt-2 h-[800px] w-full rounded-md p-4">
           <code className="text-background block w-full whitespace-pre-wrap">
             {JSON.stringify(values, null, 4)}
           </code>
